@@ -14,4 +14,7 @@ class Camp extends Model
         return $this->hasMany(Room::class);
     }
     
+    public function members(): HasMany {
+        return $this->hasMany(Member::class);
+    }
 }

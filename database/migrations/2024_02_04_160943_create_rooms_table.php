@@ -1,5 +1,6 @@
 <?php
 
+use App\Enums\RoomStatusEnum;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -15,8 +16,7 @@ return new class extends Migration
             $table->id();
             $table->string('number');
             $table->integer('capacity');
-            $table->string('status');
-
+            $table->string('status')->default(RoomStatusEnum::Open->value);
             $table->foreignId('camp_id')->constrained('camps')->cascadeOnDelete();
             $table->timestamps();
         });

@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\MemberTypeEnum;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -11,6 +12,10 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
 class Member extends Model
 {
     use HasFactory;
+
+    protected $fillable = ['room_id','company_id','department_id','name', 'phone','id_number','occupation'];
+
+    protected $casts = ['type' => MemberTypeEnum::class];
 
     public function room(): BelongsTo {
         return $this->belongsTo(Room::class);
@@ -24,11 +29,15 @@ class Member extends Model
         return $this->hasMany(Booking::class);
     }
 
-    public function company(): HasOne {
-        return $this->hasOne(Company::class);
+    public function company(): BelongsTo {
+        return $this->belongsTo(Company::class);
     }
 
-    public function department(): HasOne {
-        return $this->hasOne(Department::class);
+    public function department(): BelongsTo {
+        return $this->belongsTo(Department::class);
+    }
+
+    public function camp(): BelongsTo {
+        return $this->belongsTo(Camp::class);
     }
 }
