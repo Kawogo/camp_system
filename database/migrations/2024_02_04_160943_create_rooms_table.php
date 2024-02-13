@@ -16,7 +16,7 @@ return new class extends Migration
             $table->id();
             $table->string('number');
             $table->integer('capacity');
-            $table->string('status')->default(RoomStatusEnum::Open->value);
+            $table->string('status')->default(RoomStatusEnum::Open);
             $table->foreignId('camp_id')->constrained('camps')->cascadeOnDelete();
             $table->timestamps();
         });

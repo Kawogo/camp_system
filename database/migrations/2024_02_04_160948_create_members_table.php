@@ -16,7 +16,7 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->string('id_number');
-            $table->string('type')->default(MemberTypeEnum::Temporary->value);
+            $table->string('type')->default(MemberTypeEnum::Temporary);
             $table->string('phone');
             $table->foreignId('company_id')->constrained('companies')->nullable();
             $table->foreignId('department_id')->constrained('departments')->nullable();

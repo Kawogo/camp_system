@@ -1,5 +1,6 @@
 <?php
 
+use App\Enums\BookingStatus;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -13,10 +14,10 @@ return new class extends Migration
     {
         Schema::create('bookings', function (Blueprint $table) {
             $table->id();
+            $table->integer('period_onsite')->nullable();
             $table->timestamp('from_date');
             $table->timestamp('to_date')->nullable();
-            $table->string('status');
-            $table->integer('period_onsite');
+            $table->string('status')->default(BookingStatus::Pending);
             $table->foreignId('member_id')->constrained('members');
             $table->foreignId('room_id')->constrained('rooms');
             $table->timestamps();
