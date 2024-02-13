@@ -5,6 +5,8 @@ namespace App\Filament\Resources;
 use App\Enums\MemberTypeEnum;
 use App\Filament\Resources\MemberResource\Pages;
 use App\Filament\Resources\MemberResource\RelationManagers;
+use App\Filament\Resources\MemberResource\RelationManagers\BookingsRelationManager;
+use App\Filament\Resources\MemberResource\RelationManagers\CheckoutsRelationManager;
 use App\Models\Member;
 use App\Models\Room;
 use Filament\Forms;
@@ -113,7 +115,8 @@ class MemberResource extends Resource
     public static function getRelations(): array
     {
         return [
-            //
+            BookingsRelationManager::class,
+            CheckoutsRelationManager::class
         ];
     }
 
