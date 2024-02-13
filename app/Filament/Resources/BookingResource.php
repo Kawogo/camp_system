@@ -5,6 +5,7 @@ namespace App\Filament\Resources;
 use App\Enums\BookingStatus;
 use App\Enums\MemberTypeEnum;
 use App\Enums\RoomStatusEnum;
+use App\Filament\Exports\BookingExporter;
 use App\Filament\Resources\BookingResource\Pages;
 use App\Filament\Resources\BookingResource\RelationManagers;
 use App\Models\Booking;
@@ -16,6 +17,7 @@ use Filament\Forms\Get;
 use Filament\Forms\Set;
 use Filament\Resources\Resource;
 use Filament\Tables;
+use Filament\Tables\Actions\ExportAction;
 use Filament\Tables\Enums\FiltersLayout;
 use Filament\Tables\Filters\Filter;
 use Filament\Tables\Filters\SelectFilter;
@@ -24,6 +26,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Log;
+use pxlrbt\FilamentExcel\Actions\Tables\ExportAction as TablesExportAction;
 
 use function Laravel\Prompts\select;
 use function Pest\Laravel\options;
@@ -33,6 +36,9 @@ class BookingResource extends Resource
     protected static ?string $model = Booking::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+
+    protected static ?string $navigationGroup = 'Records Management';
+    protected static ?int $navigationSort = 1;
 
     public static function form(Form $form): Form
     {
@@ -119,6 +125,8 @@ class BookingResource extends Resource
                          Room::whereIn('id', $ids)->update(['status' => RoomStatusEnum::Open]);
                     }),
                 ]),
+            ])->headerActions([
+                TablesExportAction::make()
             ]);
     }
 
