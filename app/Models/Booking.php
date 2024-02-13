@@ -11,6 +11,8 @@ class Booking extends Model
 {
     use HasFactory;
 
+    protected $fillable = ['status'. 'period_onsite', 'from_date', 'to_date', 'room_id', 'member_id'];
+
     protected $casts = ['status' => BookingStatus::class];
 
     public function member(): BelongsTo {
