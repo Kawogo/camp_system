@@ -21,7 +21,7 @@ return new class extends Migration
             $table->foreignId('company_id')->constrained('companies')->nullable();
             $table->foreignId('department_id')->constrained('departments')->nullable();
             $table->foreignId('camp_id')->constrained('camps')->nullable();
-            $table->foreignId('room_id')->constrained('rooms')->nullable();
+            $table->foreignId('room_id')->nullable();
             $table->timestamps();
         });
     }

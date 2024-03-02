@@ -16,8 +16,9 @@ class CreateBooking extends CreateRecord
 
     protected function afterCreate(): void
     {
-        if ($this->record->status === BookingStatus::Active) {
-            Room::where('id', '=', $this->record->room_id)->update(['status' => RoomStatusEnum::Full]);
+        
+        if ($this->record->status->value === BookingStatus::Active->value) {     
+            Room::where('id', '=', $this->record->room_id)->update(['status' => RoomStatusEnum::Full->value]);
         }
 
     }
@@ -28,7 +29,6 @@ class CreateBooking extends CreateRecord
         $toDate = \Carbon\Carbon::parse($data['to_date']);
 
         $data['period_onsite'] = $toDate->diffInDays($fromDate) + 1;
-
         return $data;
     }
 

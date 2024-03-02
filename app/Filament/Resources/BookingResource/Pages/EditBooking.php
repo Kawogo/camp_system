@@ -24,8 +24,8 @@ class EditBooking extends EditRecord
 
     protected function afterSave(): void
     {
-       if ($this->record->status === BookingStatus::Closed) {
-           Room::where('id','=', $this->record->room_id)->update(['status' => RoomStatusEnum::Open]);
+       if ($this->record->status->value === BookingStatus::Closed->value) {
+           Room::where('id','=', $this->record->room_id)->update(['status' => RoomStatusEnum::Open->value]);
        }
     }
 }

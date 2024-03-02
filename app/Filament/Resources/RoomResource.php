@@ -2,14 +2,19 @@
 
 namespace App\Filament\Resources;
 
+use App\Enums\BookingStatus;
 use App\Enums\RoomStatusEnum;
 use App\Filament\Resources\RoomResource\Pages;
 use App\Filament\Resources\RoomResource\RelationManagers;
+use App\Filament\Resources\RoomResource\RelationManagers\BookingsRelationManager;
 use App\Models\Room;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
+use Filament\Tables\Enums\FiltersLayout;
+use Filament\Tables\Filters\Filter;
+use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
@@ -66,8 +71,16 @@ class RoomResource extends Resource
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
-                //
-            ])
+                SelectFilter::make('number')
+                    ->options(Room::all()->pluck('number', 'number'))
+                    ->searchable()
+                    ->label('Room Number')
+                    ->native(false),
+                SelectFilter::make('status')
+                    ->options(RoomStatusEnum::class)
+                    ->searchable()
+                    ->native(false)
+            ], layout: FiltersLayout::AboveContent)
             ->actions([
                 Tables\Actions\ViewAction::make(),
                 Tables\Actions\EditAction::make(),
@@ -82,7 +95,7 @@ class RoomResource extends Resource
     public static function getRelations(): array
     {
         return [
-            //
+            BookingsRelationManager::class
         ];
     }
 

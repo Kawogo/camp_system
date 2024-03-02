@@ -53,8 +53,7 @@ class MemberResource extends Resource
                     ->label('Room')
                     ->options(fn (Get $get): Collection => Room::query()->where('camp_id', $get('camp_id'))->pluck('number', 'id'))
                     ->searchable()
-                    ->native(false)
-                    ->required(),
+                    ->native(false),
                 Forms\Components\TextInput::make('name')
                     ->required()
                     ->maxLength(255),

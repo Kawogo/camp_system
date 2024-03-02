@@ -3,15 +3,14 @@
 namespace App\Filament\Resources;
 
 use App\Enums\BookingStatus;
-use App\Enums\MemberTypeEnum;
 use App\Enums\RoomStatusEnum;
-use App\Filament\Exports\BookingExporter;
 use App\Filament\Resources\BookingResource\Pages;
 use App\Filament\Resources\BookingResource\RelationManagers;
 use App\Models\Booking;
 use App\Models\Member;
 use App\Models\Room;
 use Filament\Forms;
+use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Form;
 use Filament\Forms\Get;
 use Filament\Forms\Set;
@@ -53,8 +52,7 @@ class BookingResource extends Resource
                     ->required(),
                 Forms\Components\Select::make('room_id')
                     ->live()
-                    ->options(fn (): Collection => Room::query()
-                        ->where('status', RoomStatusEnum::Open)
+                    ->options(fn (Get $get): Collection => Room::where('status', RoomStatusEnum::Open->value)
                         ->pluck('number', 'id'))
                     ->searchable()
                     ->native(false)
@@ -85,7 +83,7 @@ class BookingResource extends Resource
                     ->toggleable(isToggledHiddenByDefault: true)
                     ->sortable(),
                 Tables\Columns\TextColumn::make('to_date')
-                ->toggleable(isToggledHiddenByDefault: true)
+                    ->toggleable(isToggledHiddenByDefault: true)
                     ->dateTime()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('status')
@@ -112,17 +110,33 @@ class BookingResource extends Resource
                 SelectFilter::make('status')
                     ->options(BookingStatus::class)
                     ->searchable()
-                    ->native(false)
-            ], layout: FiltersLayout::AboveContent)
+                    ->native(false),
+                Filter::make('created_at')
+                    ->form([
+                        DatePicker::make('created_from'),
+                        DatePicker::make('created_until'),
+                    ])
+                    ->query(function (Builder $query, array $data): Builder {
+                        return $query
+                            ->when(
+                                $data['created_from'],
+                                fn (Builder $query, $date): Builder => $query->whereDate('created_at', '>=', $date),
+                            )
+                            ->when(
+                                $data['created_until'],
+                                fn (Builder $query, $date): Builder => $query->whereDate('created_at', '<=', $date),
+                            );
+                    })
+            ])
             ->actions([
                 Tables\Actions\ViewAction::make(),
                 Tables\Actions\EditAction::make(),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make()->after(function($records) {
-                         $ids = $records->pluck('room_id')->toArray();
-                         Room::whereIn('id', $ids)->update(['status' => RoomStatusEnum::Open]);
+                    Tables\Actions\DeleteBulkAction::make()->after(function ($records) {
+                        $ids = $records->pluck('room_id')->toArray();
+                        Room::whereIn('id', $ids)->update(['status' => RoomStatusEnum::Open]);
                     }),
                 ]),
             ])->headerActions([
